@@ -11,6 +11,9 @@
 #ifdef CURVE_BN128
 #include <libff/algebra/curves/bn128/bn128_pp.hpp>
 #endif
+#ifdef CURVE_MCL_BN128
+#include <libff/algebra/curves/mcl_bn128/mcl_bn128_pp.hpp>
+#endif
 #include <sstream>
 
 #include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
@@ -172,5 +175,13 @@ int main(void)
     test_output<G1<bn128_pp> >();
     test_group<G2<bn128_pp> >();
     test_output<G2<bn128_pp> >();
+#endif
+
+#ifdef CURVE_MCL_BN128       // MCL_BN128 has fancy dependencies so it may be disabled
+    mcl_bn128_pp::init_public_params();
+    test_group<G1<mcl_bn128_pp> >();
+    test_output<G1<mcl_bn128_pp> >();
+    test_group<G2<mcl_bn128_pp> >();
+    test_output<G2<mcl_bn128_pp> >();
 #endif
 }

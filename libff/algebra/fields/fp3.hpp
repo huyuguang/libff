@@ -68,7 +68,7 @@ public:
     Fp3_model operator-() const;
     Fp3_model squared() const;
     Fp3_model inverse() const;
-    Fp3_model Frobenius_map(unsigned long power) const;
+    Fp3_model Frobenius_map(size_t power) const;
     Fp3_model sqrt() const; // HAS TO BE A SQUARE (else does not terminate)
 
     template<mp_size_t m>

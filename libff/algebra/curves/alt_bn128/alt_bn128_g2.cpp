@@ -14,16 +14,28 @@ long long alt_bn128_G2::add_cnt = 0;
 long long alt_bn128_G2::dbl_cnt = 0;
 #endif
 
-std::vector<size_t> alt_bn128_G2::wnaf_window_table;
-std::vector<size_t> alt_bn128_G2::fixed_base_exp_window_table;
-alt_bn128_G2 alt_bn128_G2::G2_zero;
-alt_bn128_G2 alt_bn128_G2::G2_one;
+std::vector<size_t> &alt_bn128_G2::wnaf_window_table() {
+  static std::vector<size_t> _wnaf_window_table_;
+  return _wnaf_window_table_;
+}
+std::vector<size_t> &alt_bn128_G2::fixed_base_exp_window_table(){
+  static std::vector<size_t> _fixed_base_exp_window_table_;
+  return _fixed_base_exp_window_table_;
+}
+alt_bn128_G2 &alt_bn128_G2::G2_zero() {
+  static alt_bn128_G2 _G2_zero_;
+  return _G2_zero_;
+}
+alt_bn128_G2 &alt_bn128_G2::G2_one() {
+  static alt_bn128_G2 _G2_one_;
+  return _G2_one_;
+}
 
 alt_bn128_G2::alt_bn128_G2()
 {
-    this->X = G2_zero.X;
-    this->Y = G2_zero.Y;
-    this->Z = G2_zero.Z;
+    this->X = G2_zero().X;
+    this->Y = G2_zero().Y;
+    this->Z = G2_zero().Z;
 }
 
 alt_bn128_Fq2 alt_bn128_G2::mul_by_b(const alt_bn128_Fq2 &elt)
@@ -402,17 +414,17 @@ bool alt_bn128_G2::is_well_formed() const
 
 alt_bn128_G2 alt_bn128_G2::zero()
 {
-    return G2_zero;
+    return G2_zero();
 }
 
 alt_bn128_G2 alt_bn128_G2::one()
 {
-    return G2_one;
+    return G2_one();
 }
 
 alt_bn128_G2 alt_bn128_G2::random_element()
 {
-    return (alt_bn128_Fr::random_element().as_bigint()) * G2_one;
+    return (alt_bn128_Fr::random_element().as_bigint()) * G2_one();
 }
 
 std::ostream& operator<<(std::ostream &out, const alt_bn128_G2 &g)

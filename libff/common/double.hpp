@@ -55,7 +55,7 @@ namespace libff {
       Double operator^(const size_t power) const;
 
       libff::bigint<1> as_bigint() const;
-      unsigned long as_ulong() const;
+      unsigned long long as_ulong() const;
       Double inverse() const;
       Double squared() const;
 

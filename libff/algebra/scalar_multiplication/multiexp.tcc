@@ -25,6 +25,12 @@
 #include <libff/common/profiling.hpp>
 #include <libff/common/utils.hpp>
 
+#if defined(_MSC_VER)
+#ifdef NDEBUG
+#pragma warning(disable : 4100)
+#endif
+#endif
+
 namespace libff {
 
 template<mp_size_t n>
@@ -203,8 +209,8 @@ T multi_exp_inner(
             }
         }
 
-        std::vector<T> buckets(1 << c);
-        std::vector<bool> bucket_nonzero(1 << c);
+        std::vector<T> buckets((size_t)1 << c);
+        std::vector<bool> bucket_nonzero((size_t)1 << c);
 
         for (size_t i = 0; i < length; i++)
         {
@@ -213,7 +219,7 @@ T multi_exp_inner(
             {
                 if (bn_exponents[i].test_bit(k*c + j))
                 {
-                    id |= 1 << j;
+                    id |= (size_t)1 << j;
                 }
             }
 
@@ -323,7 +329,7 @@ T multi_exp_inner(
     if (vec_len != odd_vec_len)
     {
         g.emplace_back(T::zero());
-        opt_q.emplace_back(ordered_exponent<n>(odd_vec_len - 1, bigint<n>(0ul)));
+        opt_q.emplace_back(ordered_exponent<n>(odd_vec_len - 1, bigint<n>((mp_limb_t)0)));
     }
     assert(g.size() % 2 == 1);
     assert(opt_q.size() == g.size());
@@ -347,7 +353,7 @@ T multi_exp_inner(
         const size_t bbits = b.r.num_bits();
         const size_t limit = (abits-bbits >= 20 ? 20 : abits-bbits);
 
-        if (bbits < 1ul<<limit)
+        if (bbits < ((size_t)1)<<limit)
         {
             /*
               In this case, exponentiating to the power of a is cheaper than
@@ -512,7 +518,9 @@ T inner_product(typename std::vector<T>::const_iterator a_start,
 template<typename T>
 size_t get_exp_window_size(const size_t num_scalars)
 {
-    if (T::fixed_base_exp_window_table.empty())
+  auto const &fixed_base_exp_window_table = T::fixed_base_exp_window_table();
+
+    if (fixed_base_exp_window_table.empty())
     {
 #ifdef LOWMEM
         return 14;
@@ -521,15 +529,15 @@ size_t get_exp_window_size(const size_t num_scalars)
 #endif
     }
     size_t window = 1;
-    for (long i = T::fixed_base_exp_window_table.size()-1; i >= 0; --i)
+    for (int64_t i = fixed_base_exp_window_table.size()-1; i >= 0; --i)
     {
 #ifdef DEBUG
         if (!inhibit_profiling_info)
         {
-            printf("%ld %zu %zu\n", i, num_scalars, T::fixed_base_exp_window_table[i]);
+            printf("%zd %zu %zu\n", i, num_scalars, fixed_base_exp_window_table[i]);
         }
 #endif
-        if (T::fixed_base_exp_window_table[i] != 0 && num_scalars >= T::fixed_base_exp_window_table[i])
+        if (fixed_base_exp_window_table[i] != 0 && num_scalars >= fixed_base_exp_window_table[i])
         {
             window = i+1;
             break;
@@ -552,9 +560,9 @@ window_table<T> get_window_table(const size_t scalar_size,
                                  const size_t window,
                                  const T &g)
 {
-    const size_t in_window = 1ul<<window;
+    const size_t in_window = ((size_t)1)<<window;
     const size_t outerc = (scalar_size+window-1)/window;
-    const size_t last_in_window = 1ul<<(scalar_size - (outerc-1)*window);
+    const size_t last_in_window = ((size_t)1)<<(scalar_size - (outerc-1)*window);
 #ifdef DEBUG
     if (!inhibit_profiling_info)
     {
@@ -604,7 +612,7 @@ T windowed_exp(const size_t scalar_size,
         {
             if (pow_val.test_bit(outer*window + i))
             {
-                inner |= 1u << i;
+                inner |= (size_t)1 << i;
             }
         }
 

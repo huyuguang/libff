@@ -6,7 +6,6 @@
  *****************************************************************************/
 
 #include <cassert>
-
 #include <libff/algebra/curves/edwards/edwards_g1.hpp>
 #include <libff/algebra/curves/edwards/edwards_g2.hpp>
 #include <libff/algebra/curves/edwards/edwards_init.hpp>
@@ -360,7 +359,7 @@ edwards_tate_G1_precomp edwards_tate_precompute_G1(const edwards_G1& P)
     extended_edwards_G1_projective R = P_ext;
 
     bool found_one = false;
-    for (long i = edwards_modulus_r.max_bits(); i >= 0; --i)
+    for (int64_t i = edwards_modulus_r.max_bits(); i >= 0; --i)
     {
         const bool bit = edwards_modulus_r.test_bit(i);
         if (!found_one)
@@ -397,7 +396,7 @@ edwards_Fq6 edwards_tate_miller_loop(const edwards_tate_G1_precomp &prec_P,
 
     bool found_one = false;
     size_t idx = 0;
-    for (long i = edwards_modulus_r.max_bits()-1; i >= 0; --i)
+    for (int64_t i = (int64_t)edwards_modulus_r.max_bits()-1; i >= 0; --i)
     {
         const bool bit = edwards_modulus_r.test_bit(i);
         if (!found_one)
@@ -601,7 +600,7 @@ edwards_ate_G2_precomp edwards_ate_precompute_G2(const edwards_G2& Q)
     extended_edwards_G2_projective R = Q_ext;
 
     bool found_one = false;
-    for (long i = loop_count.max_bits()-1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits()-1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
         if (!found_one)
@@ -635,7 +634,7 @@ edwards_Fq6 edwards_ate_miller_loop(const edwards_ate_G1_precomp &prec_P,
 
     bool found_one = false;
     size_t idx = 0;
-    for (long i = loop_count.max_bits()-1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits()-1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
         if (!found_one)
@@ -678,7 +677,7 @@ edwards_Fq6 edwards_ate_double_miller_loop(const edwards_ate_G1_precomp &prec_P1
 
     bool found_one = false;
     size_t idx = 0;
-    for (long i = loop_count.max_bits()-1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits()-1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
         if (!found_one)

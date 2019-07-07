@@ -262,8 +262,8 @@ mnt6_affine_ate_G2_precomputation mnt6_affine_ate_precompute_G2(const mnt6_G2& Q
     const bigint<mnt6_Fr::num_limbs> &loop_count = mnt6_ate_loop_count;
     bool found_nonzero = false;
 
-    std::vector<long> NAF = find_wnaf(1, loop_count);
-    for (long i = NAF.size() - 1; i >= 0; --i)
+    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
         {
@@ -336,8 +336,8 @@ mnt6_Fq6 mnt6_affine_ate_miller_loop(const mnt6_affine_ate_G1_precomputation &pr
     bool found_nonzero = false;
     size_t idx = 0;
 
-    std::vector<long> NAF = find_wnaf(1, loop_count);
-    for (long i = NAF.size() - 1; i >= 0; --i)
+    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
         {
@@ -510,7 +510,7 @@ mnt6_ate_G2_precomp mnt6_ate_precompute_G2(const mnt6_G2& Q)
 
     const bigint<mnt6_Fr::num_limbs> &loop_count = mnt6_ate_loop_count;
     bool found_one = false;
-    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
 
@@ -565,7 +565,7 @@ mnt6_Fq6 mnt6_ate_miller_loop(const mnt6_ate_G1_precomp &prec_P,
 
     const bigint<mnt6_Fr::num_limbs> &loop_count = mnt6_ate_loop_count;
 
-    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
 
@@ -626,7 +626,7 @@ mnt6_Fq6 mnt6_ate_double_miller_loop(const mnt6_ate_G1_precomp &prec_P1,
 
     const bigint<mnt6_Fr::num_limbs> &loop_count = mnt6_ate_loop_count;
 
-    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
+    for (int64_t i = (int64_t)loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
 

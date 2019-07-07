@@ -13,6 +13,7 @@
 #include <cstdint>
 
 #include <libff/common/utils.hpp>
+#include <msvc_hack.h>
 
 namespace libff {
 
@@ -30,7 +31,7 @@ size_t get_power_of_two(size_t n)
 }
 
 size_t log2(size_t n)
-/* returns ceil(log2(n)), so 1ul<<log2(n) is the smallest power of 2,
+/* returns ceil(log2(n)), so ((size_t)1)<<log2(n) is the smallest power of 2,
    that is not less than n. */
 {
     size_t r = ((n & (n-1)) == 0 ? 0 : 1); // add 1 if n is not power of 2
@@ -46,15 +47,16 @@ size_t log2(size_t n)
 
 size_t to_twos_complement(int i, size_t w)
 {
-    assert(i >= -(1l<<(w-1)));
-    assert(i < (1l<<(w-1)));
-    return (i >= 0) ? i : i + (1l<<w);
+    assert(i >= -(((ssize_t)1) <<(w-1)));
+    assert(i < (((ssize_t)1) <<(w-1)));
+    return (i >= 0) ? i : i + (((ssize_t)1) <<w);
 }
 
 int from_twos_complement(size_t i, size_t w)
 {
-    assert(i < (1ul<<w));
-    return (i < (1ul<<(w-1))) ? i : i - (1ul<<w);
+    assert(i < (((size_t)1) <<w));
+    auto r = (i < (((size_t)1) <<(w-1))) ? i : i - (((size_t)1) <<w);
+		return (int)r;
 }
 
 size_t bitreverse(size_t n, const size_t l)
@@ -68,14 +70,14 @@ size_t bitreverse(size_t n, const size_t l)
     return r;
 }
 
-bit_vector int_list_to_bits(const std::initializer_list<unsigned long> &l, const size_t wordsize)
+bit_vector int_list_to_bits(const std::initializer_list<uint64_t> &l, const size_t wordsize)
 {
     bit_vector res(wordsize*l.size());
     for (size_t i = 0; i < l.size(); ++i)
     {
         for (size_t j = 0; j < wordsize; ++j)
         {
-            res[i*wordsize + j] = (*(l.begin()+i) & (1ul<<(wordsize-1-j)));
+            res[i*wordsize + j] = (*(l.begin()+i) & (((size_t)1) <<(wordsize-1-j)));
         }
     }
     return res;

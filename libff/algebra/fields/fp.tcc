@@ -194,16 +194,18 @@ Fp_model<n,modulus>::Fp_model(const bigint<n> &b)
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp_model<n,modulus>::Fp_model(const long x, const bool is_unsigned)
+Fp_model<n,modulus>::Fp_model(const mp_limb_signed_t x, const bool is_unsigned)
 {
-    static_assert(std::numeric_limits<mp_limb_t>::max() >= static_cast<unsigned long>(std::numeric_limits<long>::max()), "long won't fit in mp_limb_t");
+    static_assert(std::numeric_limits<mp_limb_t>::max() >= static_cast<mp_limb_t>(std::numeric_limits<mp_limb_signed_t>::max()), "long won't fit in mp_limb_t");
+
     if (is_unsigned || x >= 0)
     {
         this->mont_repr.data[0] = (mp_limb_t)x;
     }
     else
     {
-        const mp_limb_t borrow = mpn_sub_1(this->mont_repr.data, modulus.data, n, (mp_limb_t)-x);
+        mp_limb_signed_t y = (mp_limb_signed_t)x;
+        const mp_limb_t borrow = mpn_sub_1(this->mont_repr.data, modulus.data, n, (mp_limb_t)-y);
         assert(borrow == 0);
     }
 
@@ -211,7 +213,7 @@ Fp_model<n,modulus>::Fp_model(const long x, const bool is_unsigned)
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-void Fp_model<n,modulus>::set_ulong(const unsigned long x)
+void Fp_model<n,modulus>::set_ulong(const mp_limb_t x)
 {
     this->mont_repr.clear();
     this->mont_repr.data[0] = x;
@@ -238,7 +240,7 @@ bigint<n> Fp_model<n,modulus>::as_bigint() const
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-unsigned long Fp_model<n,modulus>::as_ulong() const
+mp_limb_t Fp_model<n,modulus>::as_ulong() const
 {
     return this->as_bigint().as_ulong();
 }
@@ -521,7 +523,7 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::operator*=(const Fp_model<n,modulus>& 
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp_model<n,modulus>& Fp_model<n,modulus>::operator^=(const unsigned long pow)
+Fp_model<n,modulus>& Fp_model<n,modulus>::operator^=(const mp_limb_t pow)
 {
     (*this) = power<Fp_model<n, modulus> >(*this, pow);
     return (*this);
@@ -557,7 +559,7 @@ Fp_model<n,modulus> Fp_model<n,modulus>::operator*(const Fp_model<n,modulus>& ot
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp_model<n,modulus> Fp_model<n,modulus>::operator^(const unsigned long pow) const
+Fp_model<n,modulus> Fp_model<n,modulus>::operator^(const mp_limb_t pow) const
 {
     Fp_model<n, modulus> r(*this);
     return (r ^= pow);
@@ -649,13 +651,13 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::invert()
 
     bigint<n> g; /* gp should have room for vn = n limbs */
 
-    mp_limb_t s[n+1]; /* sp should have room for vn+1 limbs */
+    mp_limb_t ss[n+1]; /* sp should have room for vn+1 limbs */
     mp_size_t sn;
 
     bigint<n> v = modulus; // both source operands are destroyed by mpn_gcdext
 
     /* computes gcd(u, v) = g = u*s + v*t, so s*u will be 1 (mod v) */
-    const mp_size_t gn = mpn_gcdext(g.data, s, &sn, this->mont_repr.data, n, v.data, n);
+    const mp_size_t gn = mpn_gcdext(g.data, ss, &sn, this->mont_repr.data, n, v.data, n);
     assert(gn == 1 && g.data[0] == 1); /* inverse exists */
 
     mp_limb_t q; /* division result fits into q, as sn <= n+1 */
@@ -664,13 +666,13 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::invert()
     if (std::abs(sn) >= n)
     {
         /* if sn could require modulus reduction, do it here */
-        mpn_tdiv_qr(&q, this->mont_repr.data, 0, s, std::abs(sn), modulus.data, n);
+        mpn_tdiv_qr(&q, this->mont_repr.data, 0, ss, std::abs(sn), modulus.data, n);
     }
     else
     {
         /* otherwise just copy it over */
         mpn_zero(this->mont_repr.data, n);
-        mpn_copyi(this->mont_repr.data, s, std::abs(sn));
+        mpn_copyi(this->mont_repr.data, ss, std::abs(sn));
     }
 
     /* fix up the negative sn */
@@ -709,7 +711,7 @@ Fp_model<n, modulus> Fp_model<n,modulus>::random_element() /// returns random el
             const std::size_t part = bitno/GMP_NUMB_BITS;
             const std::size_t bit = bitno - (GMP_NUMB_BITS*part);
 
-            r.mont_repr.data[part] &= ~(1ul<<bit);
+            r.mont_repr.data[part] &= ~(((size_t)1)<<bit);
 
             bitno--;
         }
@@ -731,7 +733,7 @@ Fp_model<n,modulus> Fp_model<n,modulus>::sqrt() const
     Fp_model<n,modulus> x = (*this) * w;
     Fp_model<n,modulus> b = x * w; // b = (*this)^t
 
-#if DEBUG
+#ifdef DEBUG
     // check if square with euler's criterion
     Fp_model<n,modulus> check = b;
     for (size_t i = 0; i < v-1; ++i)
@@ -758,7 +760,7 @@ Fp_model<n,modulus> Fp_model<n,modulus>::sqrt() const
             m += 1;
         }
 
-        int j = v-m-1;
+        int j = (int)(v-m-1);
         w = z;
         while (j > 0)
         {

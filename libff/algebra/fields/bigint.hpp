@@ -35,7 +35,7 @@ public:
     mp_limb_t data[n] = {0};
 
     bigint() = default;
-    bigint(const unsigned long x); /// Initalize from a small integer
+    bigint(const mp_limb_t x); /// Initalize from a small integer
     bigint(const char* s); /// Initialize from a string containing an integer in decimal notation
     bigint(const mpz_t r); /// Initialize from MPZ element
 
@@ -48,7 +48,7 @@ public:
     size_t max_bits() const { return n * GMP_NUMB_BITS; } /// Returns the number of bits representable by this bigint type
     size_t num_bits() const; /// Returns the number of bits in this specific bigint value, i.e., position of the most-significant 1
 
-    unsigned long as_ulong() const; /// Return the last limb of the integer
+    mp_limb_t as_ulong() const; /// Return the last limb of the integer
     void to_mpz(mpz_t r) const;
     bool test_bit(const std::size_t bitno) const;
 

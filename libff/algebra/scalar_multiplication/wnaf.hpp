@@ -12,6 +12,7 @@
 #ifndef WNAF_HPP_
 #define WNAF_HPP_
 
+#include <msvc_hack.h>
 #include <vector>
 
 #include <libff/algebra/fields/bigint.hpp>
@@ -22,7 +23,7 @@ namespace libff {
  * Find the wNAF representation of the given scalar relative to the given window size.
  */
 template<mp_size_t n>
-std::vector<long> find_wnaf(const size_t window_size, const bigint<n> &scalar);
+std::vector<ssize_t> find_wnaf(const size_t window_size, const bigint<n> &scalar);
 
 /**
  * In additive notation, use wNAF exponentiation (with the given window size) to compute scalar * base.

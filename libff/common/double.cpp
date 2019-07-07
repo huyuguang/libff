@@ -20,6 +20,7 @@
 namespace libff {
 
   const double PI = 3.141592653589793238460264338328L;
+  size_t Double::s; // useless, just let msvc happy
 
   Double::Double()
   {
@@ -133,12 +134,12 @@ namespace libff {
 
   Double Double::operator^(const libff::bigint<1> power) const
   {
-    return Double(pow(val, power.as_ulong()));
+    return Double(pow(val, (double)power.as_ulong()));
   }
 
   Double Double::operator^(const size_t power) const
   {
-    return Double(pow(val, power));
+    return Double(pow(val, (double)power));
   }
 
   Double Double::inverse() const
@@ -152,12 +153,12 @@ namespace libff {
 
   libff::bigint<1> Double::as_bigint() const
   {
-    return libff::bigint<1>(val.real());
+    return libff::bigint<1>((size_t)val.real());
   }
 
-  unsigned long Double::as_ulong() const
+  unsigned long long Double::as_ulong() const
   {
-    return round(val.real());
+    return (unsigned long long)round(val.real());
   }
 
   Double Double::squared() const

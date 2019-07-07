@@ -25,6 +25,10 @@ typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity(const size_t n);
 
 template<typename FieldT>
+typename std::enable_if<std::is_same<FieldT, Double>::value, FieldT>::type
+get_root_of_unity2(const size_t n, bool* success);
+
+template<typename FieldT>
 typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity2(const size_t n, bool* success);
 

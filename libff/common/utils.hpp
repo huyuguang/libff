@@ -22,7 +22,7 @@ typedef std::vector<bool> bit_vector;
 
 size_t get_power_of_two(size_t n);
 
-/// returns ceil(log2(n)), so 1ul<<log2(n) is the smallest power of 2, that is not less than n
+/// returns ceil(log2(n)), so ((size_t)1)<<log2(n) is the smallest power of 2, that is not less than n
 size_t log2(size_t n);
 
 inline size_t exp2(size_t k) { return size_t(1) << k; }
@@ -31,7 +31,7 @@ size_t to_twos_complement(int i, size_t w);
 int from_twos_complement(size_t i, size_t w);
 
 size_t bitreverse(size_t n, const size_t l);
-bit_vector int_list_to_bits(const std::initializer_list<unsigned long> &l, const size_t wordsize);
+bit_vector int_list_to_bits(const std::initializer_list<uint64_t> &l, const size_t wordsize);
 long long div_ceil(long long x, long long y);
 
 bool is_little_endian();

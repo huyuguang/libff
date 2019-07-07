@@ -65,7 +65,7 @@ public:
     Fp6_2over3_model operator-() const;
     Fp6_2over3_model squared() const;
     Fp6_2over3_model inverse() const;
-    Fp6_2over3_model Frobenius_map(unsigned long power) const;
+    Fp6_2over3_model Frobenius_map(size_t power) const;
     Fp6_2over3_model unitary_inverse() const;
     Fp6_2over3_model cyclotomic_squared() const;
 

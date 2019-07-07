@@ -24,15 +24,25 @@ public:
     static long long add_cnt;
     static long long dbl_cnt;
 #endif
-    static std::vector<size_t> wnaf_window_table;
-    static std::vector<size_t> fixed_base_exp_window_table;
-    static alt_bn128_G1 G1_zero;
-    static alt_bn128_G1 G1_one;
+    static std::vector<size_t>& wnaf_window_table();
+    static std::vector<size_t>& fixed_base_exp_window_table();
+    static alt_bn128_G1& G1_zero();
+    static alt_bn128_G1& G1_one();
 
     typedef alt_bn128_Fq base_field;
     typedef alt_bn128_Fr scalar_field;
 
     alt_bn128_Fq X, Y, Z;
+  alt_bn128_Fq &coord(int i) {
+    if (i == 0)
+      return X;
+    else if (i == 1)
+      return Y;
+    else if (i == 2)
+      return Z;
+    else
+      throw std::runtime_error("invalid index");
+  }
 
     // using Jacobian coordinates
     alt_bn128_G1();

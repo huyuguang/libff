@@ -14,16 +14,30 @@ long long alt_bn128_G1::add_cnt = 0;
 long long alt_bn128_G1::dbl_cnt = 0;
 #endif
 
-std::vector<size_t> alt_bn128_G1::wnaf_window_table;
-std::vector<size_t> alt_bn128_G1::fixed_base_exp_window_table;
-alt_bn128_G1 alt_bn128_G1::G1_zero;
-alt_bn128_G1 alt_bn128_G1::G1_one;
+std::vector<size_t>& alt_bn128_G1::wnaf_window_table() {
+  static std::vector<size_t> _wnaf_window_table_;
+  return _wnaf_window_table_;
+}
 
-alt_bn128_G1::alt_bn128_G1()
-{
-    this->X = G1_zero.X;
-    this->Y = G1_zero.Y;
-    this->Z = G1_zero.Z;
+std::vector<size_t> &alt_bn128_G1::fixed_base_exp_window_table() {
+  static std::vector<size_t> _fixed_base_exp_window_table_;
+  return _fixed_base_exp_window_table_;
+}
+
+alt_bn128_G1 &alt_bn128_G1::G1_zero() { 
+  static alt_bn128_G1 _G1_zero_;
+  return _G1_zero_;
+}
+
+alt_bn128_G1 &alt_bn128_G1::G1_one() {
+  static alt_bn128_G1 _G1_one_;
+  return _G1_one_;
+}
+
+alt_bn128_G1::alt_bn128_G1() {
+    this->X = G1_zero().X;
+    this->Y = G1_zero().Y;
+    this->Z = G1_zero().Z;
 }
 
 void alt_bn128_G1::print() const
@@ -388,17 +402,17 @@ bool alt_bn128_G1::is_well_formed() const
 
 alt_bn128_G1 alt_bn128_G1::zero()
 {
-    return G1_zero;
+    return G1_zero();
 }
 
 alt_bn128_G1 alt_bn128_G1::one()
 {
-    return G1_one;
+    return G1_one();
 }
 
 alt_bn128_G1 alt_bn128_G1::random_element()
 {
-    return (scalar_field::random_element().as_bigint()) * G1_one;
+    return (scalar_field::random_element().as_bigint()) * G1_one();
 }
 
 std::ostream& operator<<(std::ostream &out, const alt_bn128_G1 &g)

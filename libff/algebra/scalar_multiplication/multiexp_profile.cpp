@@ -1,7 +1,12 @@
 #include <cstdio>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
+#else
 #include <libff/algebra/curves/bn128/bn128_pp.hpp>
+#endif
+
 #include <libff/algebra/scalar_multiplication/multiexp.hpp>
 #include <libff/common/profiling.hpp>
 #include <libff/common/rng.hpp>
@@ -77,22 +82,22 @@ void print_performance_csv(
     bool compare_answers)
 {
     for (size_t expn = expn_start; expn <= expn_end_fast; expn++) {
-        printf("%ld", expn); fflush(stdout);
+        printf("%zd", expn); fflush(stdout);
 
         test_instances_t<GroupT> group_elements =
-            generate_group_elements<GroupT>(10, 1 << expn);
+            generate_group_elements<GroupT>((size_t)10, (size_t)1 << expn);
         test_instances_t<FieldT> scalars =
-            generate_scalars<FieldT>(10, 1 << expn);
+            generate_scalars<FieldT>((size_t)10, (size_t)1 << expn);
 
         run_result_t<GroupT> result_bos_coster =
             profile_multiexp<GroupT, FieldT, multi_exp_method_bos_coster>(
                 group_elements, scalars);
-        printf("\t%lld", result_bos_coster.first); fflush(stdout);
+        printf("\t%zd", result_bos_coster.first); fflush(stdout);
 
         run_result_t<GroupT> result_djb =
             profile_multiexp<GroupT, FieldT, multi_exp_method_BDLO12>(
                 group_elements, scalars);
-        printf("\t%lld", result_djb.first); fflush(stdout);
+        printf("\t%zd", result_djb.first); fflush(stdout);
 
         if (compare_answers && (result_bos_coster.second != result_djb.second)) {
             fprintf(stderr, "Answers NOT MATCHING (bos coster != djb)\n");
@@ -117,12 +122,20 @@ int main(void)
 {
     print_compilation_info();
 
+#ifdef _MSC_VER
+    printf("Profiling ALT_BN128_G1\n");
+    alt_bn128_pp::init_public_params();
+    print_performance_csv<G1<alt_bn128_pp>, Fr<alt_bn128_pp> >(2, 20, 14, true);
+
+    printf("Profiling ALT_BN128_G2\n");
+    print_performance_csv<G2<alt_bn128_pp>, Fr<alt_bn128_pp> >(2, 20, 14, true);
+#else
     printf("Profiling BN128_G1\n");
     bn128_pp::init_public_params();
     print_performance_csv<G1<bn128_pp>, Fr<bn128_pp> >(2, 20, 14, true);
 
     printf("Profiling BN128_G2\n");
     print_performance_csv<G2<bn128_pp>, Fr<bn128_pp> >(2, 20, 14, true);
-
+#endif
     return 0;
 }

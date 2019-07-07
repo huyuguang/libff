@@ -9,6 +9,9 @@
 #ifdef CURVE_BN128
 #include <libff/algebra/curves/bn128/bn128_pp.hpp>
 #endif
+#ifdef CURVE_MCL_BN128
+#include <libff/algebra/curves/mcl_bn128/mcl_bn128_pp.hpp>
+#endif
 #include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
 #include <libff/algebra/curves/mnt/mnt4/mnt4_pp.hpp>
 #include <libff/algebra/curves/mnt/mnt6/mnt6_pp.hpp>
@@ -132,5 +135,11 @@ int main(void)
     bn128_pp::init_public_params();
     pairing_test<bn128_pp>();
     double_miller_loop_test<bn128_pp>();
+#endif
+
+#ifdef CURVE_MCL_BN128       // BN128 has fancy dependencies so it may be disabled
+    mcl_bn128_pp::init_public_params();
+    pairing_test<mcl_bn128_pp>();
+    double_miller_loop_test<mcl_bn128_pp>();
 #endif
 }

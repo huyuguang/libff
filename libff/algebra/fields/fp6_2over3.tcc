@@ -142,7 +142,7 @@ Fp6_2over3_model<n,modulus> Fp6_2over3_model<n,modulus>::inverse() const
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp6_2over3_model<n,modulus> Fp6_2over3_model<n,modulus>::Frobenius_map(unsigned long power) const
+Fp6_2over3_model<n,modulus> Fp6_2over3_model<n,modulus>::Frobenius_map(size_t power) const
 {
     return Fp6_2over3_model<n,modulus>(c0.Frobenius_map(power),
                                        Frobenius_coeffs_c1[power % 6] * c1.Frobenius_map(power));
@@ -217,9 +217,9 @@ Fp6_2over3_model<n, modulus> Fp6_2over3_model<n,modulus>::cyclotomic_exp(const b
     Fp6_2over3_model<n,modulus> this_inverse = this->unitary_inverse();
 
     bool found_nonzero = false;
-    std::vector<long> NAF = find_wnaf(1, exponent);
+    std::vector<int64_t> NAF = find_wnaf(1, exponent);
 
-    for (long i = static_cast<long>(NAF.size() - 1); i >= 0; --i)
+    for (ssize_t i = static_cast<ssize_t>(NAF.size() - 1); i >= 0; --i)
     {
         if (found_nonzero)
         {

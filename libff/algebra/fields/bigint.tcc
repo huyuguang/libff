@@ -12,11 +12,12 @@
 #include <cassert>
 #include <cstring>
 #include <random>
+#include <msvc_hack.h>
 
 namespace libff {
 
 template<mp_size_t n>
-bigint<n>::bigint(const unsigned long x) /// Initalize from a small integer
+bigint<n>::bigint(const mp_limb_t x) /// Initalize from a small integer
 {
     assert(8*sizeof(x) <= GMP_NUMB_BITS);
     this->data[0] = x;
@@ -114,7 +115,7 @@ size_t bigint<n>::num_bits() const
 
     return 0;
 */
-    for (long i = n-1; i >= 0; --i)
+    for (int64_t i = n-1; i >= 0; --i)
     {
         mp_limb_t x = this->data[i];
         if (x == 0)
@@ -123,14 +124,14 @@ size_t bigint<n>::num_bits() const
         }
         else
         {
-            return ((i+1) * GMP_NUMB_BITS) - __builtin_clzl(x);
+            return ((i+1) * GMP_NUMB_BITS) - builtin_clzl(x);
         }
     }
     return 0;
 }
 
 template<mp_size_t n>
-unsigned long bigint<n>::as_ulong() const
+mp_limb_t bigint<n>::as_ulong() const
 {
     return this->data[0];
 }

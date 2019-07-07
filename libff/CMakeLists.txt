@@ -20,6 +20,26 @@ if(${CURVE} STREQUAL "BN128")
   )
 endif()
 
+if(${CURVE} STREQUAL "MCL_BN128")
+  set(
+    FF_EXTRASRCS
+
+    ${FF_EXTRASRCS}
+    algebra/curves/mcl_bn128/mcl_bn128_g1.cpp
+    algebra/curves/mcl_bn128/mcl_bn128_g2.cpp
+    algebra/curves/mcl_bn128/mcl_bn128_gt.cpp
+    algebra/curves/mcl_bn128/mcl_bn128_init.cpp
+    algebra/curves/mcl_bn128/mcl_bn128_pairing.cpp
+    algebra/curves/mcl_bn128/mcl_bn128_pp.cpp
+  )
+  set(
+    FF_EXTRALIBS
+
+    ${FF_EXTRALIBS}
+    mcl
+  )
+endif()
+
 add_library(
   ff
   STATIC
@@ -49,8 +69,11 @@ add_library(
   common/profiling.cpp
   common/utils.cpp
 
-  ${FF_EXTRASRCS}
+  ${FF_EXTRASRCS}  
 )
+
+#set_property(TARGET ff PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 target_link_libraries(
   ff
 

@@ -62,7 +62,7 @@ public:
     Fp4_model operator-() const;
     Fp4_model squared() const;
     Fp4_model inverse() const;
-    Fp4_model Frobenius_map(unsigned long power) const;
+    Fp4_model Frobenius_map(size_t power) const;
     Fp4_model unitary_inverse() const;
     Fp4_model cyclotomic_squared() const;
 

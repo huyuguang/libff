@@ -137,7 +137,7 @@ Fp3_model<n,modulus> Fp3_model<n,modulus>::inverse() const
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp3_model<n,modulus> Fp3_model<n,modulus>::Frobenius_map(unsigned long power) const
+Fp3_model<n,modulus> Fp3_model<n,modulus>::Frobenius_map(size_t power) const
 {
     return Fp3_model<n,modulus>(c0,
                                 Frobenius_coeffs_c1[power % 3] * c1,
@@ -182,7 +182,7 @@ Fp3_model<n,modulus> Fp3_model<n,modulus>::sqrt() const
             m += 1;
         }
 
-        int j = v-m-1;
+        int j = int(v-m-1);
         w = z;
         while (j > 0)
         {

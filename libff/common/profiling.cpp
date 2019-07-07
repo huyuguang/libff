@@ -39,7 +39,7 @@ long long get_nsec_time()
 long long get_nsec_cpu_time()
 {
 #if _MSC_VER
-	return 0;
+	return 0; // TODO
 #else
     ::timespec ts;
     if ( ::clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) )
@@ -50,8 +50,25 @@ long long get_nsec_cpu_time()
 #endif
 }
 
-long long start_time, last_time;
-long long start_cpu_time, last_cpu_time;
+namespace {
+thread_local long long start_time, last_time;
+thread_local long long start_cpu_time, last_cpu_time;
+thread_local std::map<std::string, size_t> invocation_counts;
+thread_local std::map<std::string, long long> enter_times;
+thread_local std::map<std::string, long long> last_times;
+thread_local std::map<std::string, long long> cumulative_times;
+// TODO: Instead of analogous maps for time and cpu_time, use a single
+// struct-valued map
+thread_local std::map<std::string, long long> enter_cpu_times;
+thread_local std::map<std::string, long long> last_cpu_times;
+thread_local std::map<std::pair<std::string, std::string>, long long> op_counts;
+thread_local std::map<std::pair<std::string, std::string>, long long>
+    cumulative_op_counts;  // ((msg, data_point), value)
+// TODO: Convert op_counts and cumulative_op_counts from pair to structs
+thread_local size_t indentation = 0;
+
+thread_local std::vector<std::string> block_names;
+}  // namespace
 
 void start_profiling()
 {
@@ -60,20 +77,6 @@ void start_profiling()
     last_time = start_time = get_nsec_time();
     last_cpu_time = start_cpu_time = get_nsec_cpu_time();
 }
-
-std::map<std::string, size_t> invocation_counts;
-std::map<std::string, long long> enter_times;
-std::map<std::string, long long> last_times;
-std::map<std::string, long long> cumulative_times;
-//TODO: Instead of analogous maps for time and cpu_time, use a single struct-valued map
-std::map<std::string, long long> enter_cpu_times;
-std::map<std::string, long long> last_cpu_times;
-std::map<std::pair<std::string, std::string>, long long> op_counts;
-std::map<std::pair<std::string, std::string>, long long> cumulative_op_counts; // ((msg, data_point), value)
-    // TODO: Convert op_counts and cumulative_op_counts from pair to structs
-size_t indentation = 0;
-
-std::vector<std::string> block_names;
 
 std::list<std::pair<std::string, long long*> > op_data_points = {
 #ifdef PROFILE_OP_COUNTS
@@ -337,11 +340,11 @@ void print_mem(const std::string &s)
     look_up_our_self(&usage);
     if (s.empty())
     {
-        printf("* Peak vsize (physical memory+swap) in mebibytes: %lu\n", usage.vsize >> 20);
+        printf("* Peak vsize (physical memory+swap) in mebibytes: %zu\n", (size_t)usage.vsize >> 20);
     }
     else
     {
-        printf("* Peak vsize (physical memory+swap) in mebibytes (%s): %lu\n", s.c_str(), usage.vsize >> 20);
+        printf("* Peak vsize (physical memory+swap) in mebibytes (%s): %zu\n", s.c_str(), (size_t)usage.vsize >> 20);
     }
 #else
     printf("* Memory profiling not supported in NO_PROCPS mode\n");

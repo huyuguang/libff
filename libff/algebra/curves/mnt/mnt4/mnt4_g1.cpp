@@ -20,18 +20,31 @@ long long mnt4_G1::add_cnt = 0;
 long long mnt4_G1::dbl_cnt = 0;
 #endif
 
-std::vector<size_t> mnt4_G1::wnaf_window_table;
-std::vector<size_t> mnt4_G1::fixed_base_exp_window_table;
-mnt4_G1 mnt4_G1::G1_zero;
-mnt4_G1 mnt4_G1::G1_one;
+std::vector<size_t> &mnt4_G1::wnaf_window_table() {
+  static std::vector<size_t> _wnaf_window_table_;
+  return _wnaf_window_table_;
+}
+std::vector<size_t>& mnt4_G1::fixed_base_exp_window_table() {
+  static std::vector<size_t> _fixed_base_exp_window_table_;
+  return _fixed_base_exp_window_table_;
+}
+mnt4_G1 &mnt4_G1::G1_zero() {
+  static mnt4_G1 _G1_zero_;
+  return _G1_zero_;
+}
+mnt4_G1 &mnt4_G1::G1_one() {
+  static mnt4_G1 _G1_one_;
+  return _G1_one_;
+}
+
 mnt4_Fq mnt4_G1::coeff_a;
 mnt4_Fq mnt4_G1::coeff_b;
 
 mnt4_G1::mnt4_G1()
 {
-    this->X_ = G1_zero.X_;
-    this->Y_ = G1_zero.Y_;
-    this->Z_ = G1_zero.Z_;
+    this->X_ = G1_zero().X_;
+    this->Y_ = G1_zero().Y_;
+    this->Z_ = G1_zero().Z_;
 }
 
 void mnt4_G1::print() const
@@ -373,17 +386,17 @@ bool mnt4_G1::is_well_formed() const
 
 mnt4_G1 mnt4_G1::zero()
 {
-    return G1_zero;
+    return G1_zero();
 }
 
 mnt4_G1 mnt4_G1::one()
 {
-    return G1_one;
+    return G1_one();
 }
 
 mnt4_G1 mnt4_G1::random_element()
 {
-    return (scalar_field::random_element().as_bigint()) * G1_one;
+    return (scalar_field::random_element().as_bigint()) * G1_one();
 }
 
 std::ostream& operator<<(std::ostream &out, const mnt4_G1 &g)

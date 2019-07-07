@@ -15,10 +15,25 @@ long long bn128_G1::add_cnt = 0;
 long long bn128_G1::dbl_cnt = 0;
 #endif
 
-std::vector<size_t> bn128_G1::wnaf_window_table;
-std::vector<size_t> bn128_G1::fixed_base_exp_window_table;
-bn128_G1 bn128_G1::G1_zero;
-bn128_G1 bn128_G1::G1_one;
+std::vector<size_t> &bn128_G1::wnaf_window_table() {
+  static std::vector<size_t> _wnaf_window_table_;
+  return _wnaf_window_table_;
+}
+
+std::vector<size_t>& bn128_G1::fixed_base_exp_window_table() {
+  static std::vector<size_t> _fixed_base_exp_window_table_;
+  return _fixed_base_exp_window_table_;
+}
+
+bn128_G1 &bn128_G1::G1_zero() {
+  static bn128_G1 _G1_zero_;
+  return _G1_zero_;
+}
+
+bn128_G1 &bn128_G1::G1_one() {
+  static bn128_G1 _G1_one_;
+  return _G1_one_;
+}
 
 bn::Fp bn128_G1::sqrt(const bn::Fp &el)
 {
@@ -53,7 +68,7 @@ bn::Fp bn128_G1::sqrt(const bn::Fp &el)
             m += 1;
         }
 
-        int j = v-m-1;
+        int j = (int)(v-m-1);
         w = z;
         while (j > 0)
         {
@@ -72,9 +87,9 @@ bn::Fp bn128_G1::sqrt(const bn::Fp &el)
 
 bn128_G1::bn128_G1()
 {
-    this->coord[0] = G1_zero.coord[0];
-    this->coord[1] = G1_zero.coord[1];
-    this->coord[2] = G1_zero.coord[2];
+    this->coord[0] = G1_zero().coord[0];
+    this->coord[1] = G1_zero().coord[1];
+    this->coord[2] = G1_zero().coord[2];
 }
 
 void bn128_G1::print() const
@@ -328,17 +343,17 @@ bn128_G1 bn128_G1::dbl() const
 
 bn128_G1 bn128_G1::zero()
 {
-    return G1_zero;
+    return G1_zero();
 }
 
 bn128_G1 bn128_G1::one()
 {
-    return G1_one;
+    return G1_one();
 }
 
 bn128_G1 bn128_G1::random_element()
 {
-    return bn128_Fr::random_element().as_bigint() * G1_one;
+    return bn128_Fr::random_element().as_bigint() * G1_one();
 }
 
 std::ostream& operator<<(std::ostream &out, const bn128_G1 &g)

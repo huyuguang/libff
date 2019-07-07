@@ -16,7 +16,7 @@ GroupT scalar_mul(const GroupT &base, const bigint<m> &scalar)
     GroupT result = GroupT::zero();
 
     bool found_one = false;
-    for (long i = static_cast<long>(scalar.max_bits() - 1); i >= 0; --i)
+    for (int64_t i = static_cast<int64_t>(scalar.max_bits() - 1); i >= 0; --i)
     {
         if (found_one)
         {

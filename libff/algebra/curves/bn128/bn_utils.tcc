@@ -28,7 +28,7 @@ void bn_batch_invert(std::vector<FieldT> &vec)
     FieldT acc_inverse = acc;
     acc_inverse.inverse();
 
-    for (long i = vec.size()-1; i >= 0; --i)
+    for (ssize_t i = (ssize_t)vec.size()-1; i >= 0; --i)
     {
         const FieldT old_el = vec[i];
         FieldT::mul(vec[i], acc_inverse, prod[i]);

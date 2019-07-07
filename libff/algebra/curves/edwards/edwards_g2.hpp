@@ -25,11 +25,11 @@ public:
     static long long add_cnt;
     static long long dbl_cnt;
 #endif
-    static std::vector<size_t> wnaf_window_table;
-    static std::vector<size_t> fixed_base_exp_window_table;
+    static std::vector<size_t>& wnaf_window_table();
+    static std::vector<size_t>& fixed_base_exp_window_table();
 
-    static edwards_G2 G2_zero;
-    static edwards_G2 G2_one;
+    static edwards_G2& G2_zero();
+    static edwards_G2& G2_one();
 
     edwards_Fq3 X, Y, Z;
     edwards_G2();

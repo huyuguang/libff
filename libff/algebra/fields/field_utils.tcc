@@ -9,7 +9,7 @@
 
 #ifndef FIELD_UTILS_TCC_
 #define FIELD_UTILS_TCC_
-
+#include <msvc_hack.h>
 #include <complex>
 #include <stdexcept>
 
@@ -32,12 +32,20 @@ get_root_of_unity(const size_t n) {
 }
 
 template <typename FieldT>
+typename std::enable_if<std::is_same<FieldT, Double>::value, FieldT>::type
+get_root_of_unity2(const size_t n, bool *success) {
+  const double PI = 3.141592653589793238460264338328L;
+  *success = true;
+  return FieldT(cos(2 * PI / n), sin(2 * PI / n));
+}
+
+template <typename FieldT>
 typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity(const size_t n) {
   const size_t logn = log2(n);
-  if (n != (1u << logn))
+  if (n != ((size_t)1 << logn))
     throw std::invalid_argument(
-        "libff::get_root_of_unity: expected n == (1u << logn)");
+        "libff::get_root_of_unity: expected n == ((size_t)1 << logn)");
   if (logn > FieldT::s)
     throw std::invalid_argument(
         "libff::get_root_of_unity: expected logn <= FieldT::s");
@@ -54,11 +62,11 @@ template <typename FieldT>
 typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity2(const size_t n, bool *success) {
   const size_t logn = log2(n);
-  if (n != (1u << logn)) {
+  if (n != ((size_t)1u << logn)) {
     *success = false;
     return FieldT();
   }
-  
+
   if (logn > FieldT::s) {
     *success = false;
     return FieldT();
@@ -200,7 +208,7 @@ void batch_invert(std::vector<FieldT> &vec) {
 
   FieldT acc_inverse = acc.inverse();
 
-  for (long i = static_cast<long>(vec.size() - 1); i >= 0; --i) {
+  for (ssize_t i = static_cast<ssize_t>(vec.size() - 1); i >= 0; --i) {
     const FieldT old_el = vec[i];
     vec[i] = acc_inverse * prod[i];
     acc_inverse = acc_inverse * old_el;

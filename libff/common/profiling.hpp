@@ -30,9 +30,6 @@ void print_indent();
 
 extern bool inhibit_profiling_info;
 extern bool inhibit_profiling_counters;
-extern std::map<std::string, size_t> invocation_counts;
-extern std::map<std::string, long long> last_times;
-extern std::map<std::string, long long> cumulative_times;
 
 void clear_profiling_counters();
 

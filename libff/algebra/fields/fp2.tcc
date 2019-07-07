@@ -136,7 +136,7 @@ Fp2_model<n,modulus> Fp2_model<n,modulus>::inverse() const
 }
 
 template<mp_size_t n, const bigint<n>& modulus>
-Fp2_model<n,modulus> Fp2_model<n,modulus>::Frobenius_map(unsigned long power) const
+Fp2_model<n,modulus> Fp2_model<n,modulus>::Frobenius_map(size_t power) const
 {
     return Fp2_model<n,modulus>(c0,
                                 Frobenius_coeffs_c1[power % 2] * c1);
@@ -153,7 +153,7 @@ Fp2_model<n,modulus> Fp2_model<n,modulus>::sqrt() const
     Fp2_model<n,modulus> x = (*this) * w;
     Fp2_model<n,modulus> b = x * w; // b = (*this)^t
 
-#if DEBUG
+#ifdef DEBUG
     // check if square with euler's criterion
     Fp2_model<n,modulus> check = b;
     for (size_t i = 0; i < v-1; ++i)
@@ -180,7 +180,7 @@ Fp2_model<n,modulus> Fp2_model<n,modulus>::sqrt() const
             m += 1;
         }
 
-        int j = v-m-1;
+        int j = (int)(v-m-1);
         w = z;
         while (j > 0)
         {
