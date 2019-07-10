@@ -262,7 +262,7 @@ mnt6_affine_ate_G2_precomputation mnt6_affine_ate_precompute_G2(const mnt6_G2& Q
     const bigint<mnt6_Fr::num_limbs> &loop_count = mnt6_ate_loop_count;
     bool found_nonzero = false;
 
-    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    auto NAF = find_wnaf(1, loop_count);
     for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
@@ -336,7 +336,7 @@ mnt6_Fq6 mnt6_affine_ate_miller_loop(const mnt6_affine_ate_G1_precomputation &pr
     bool found_nonzero = false;
     size_t idx = 0;
 
-    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    auto NAF = find_wnaf(1, loop_count);
     for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
