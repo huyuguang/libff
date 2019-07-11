@@ -180,7 +180,7 @@ T multi_exp_inner(
     size_t length = bases_end - bases;
 
     // empirically, this seems to be a decent estimate of the optimal value of c
-    size_t log2_length = log2(length);
+    size_t log2_length = libff::log2(length);
     size_t c = log2_length - (log2_length / 3 - 2);
 
     const mp_size_t exp_num_limbs =

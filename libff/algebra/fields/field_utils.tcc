@@ -42,7 +42,7 @@ get_root_of_unity2(const size_t n, bool *success) {
 template <typename FieldT>
 typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity(const size_t n) {
-  const size_t logn = log2(n);
+  const size_t logn = libff::log2(n);
   if (n != ((size_t)1 << logn))
     throw std::invalid_argument(
         "libff::get_root_of_unity: expected n == ((size_t)1 << logn)");
@@ -61,7 +61,7 @@ get_root_of_unity(const size_t n) {
 template <typename FieldT>
 typename std::enable_if<!std::is_same<FieldT, Double>::value, FieldT>::type
 get_root_of_unity2(const size_t n, bool *success) {
-  const size_t logn = log2(n);
+  const size_t logn = libff::log2(n);
   if (n != ((size_t)1u << logn)) {
     *success = false;
     return FieldT();
