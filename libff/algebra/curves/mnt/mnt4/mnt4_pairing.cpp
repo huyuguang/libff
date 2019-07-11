@@ -257,7 +257,7 @@ mnt4_affine_ate_G2_precomputation mnt4_affine_ate_precompute_G2(const mnt4_G2& Q
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
     bool found_nonzero = false;
 
-    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    auto NAF = find_wnaf(1, loop_count);
     for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
@@ -331,7 +331,7 @@ mnt4_Fq4 mnt4_affine_ate_miller_loop(const mnt4_affine_ate_G1_precomputation &pr
     size_t idx = 0;
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
 
-    std::vector<int64_t> NAF = find_wnaf(1, loop_count);
+    auto NAF = find_wnaf(1, loop_count);
     for (int64_t i = (int64_t)NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
