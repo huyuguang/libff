@@ -13,6 +13,7 @@
 #define DOUBLE_HPP_
 
 #include <complex>
+#include <iostream>
 
 #include <libff/algebra/fields/bigint.hpp>
 
@@ -69,6 +70,8 @@ namespace libff {
       static Double root_of_unity; // See get_root_of_unity() in field_utils
       static size_t s;
   };
-} // libff
+  std::ostream& operator<<(std::ostream &output, const Double &d);
+  std::istream &operator>>(std::istream &input, Double &d);
+  } // libff
 
 #endif // DOUBLE_HPP_

@@ -11,7 +11,6 @@
 
 #include <cmath>
 #include <complex>
-
 #include <math.h>
 
 #include <libff/algebra/fields/bigint.hpp>
@@ -193,4 +192,15 @@ namespace libff {
 
   Double Double::multiplicative_generator = Double(2);
 
+  std::ostream& operator<<(std::ostream &output, const Double &d)
+  { 
+     output << d.val;
+     return output;           
+  }
+ 
+  std::istream &operator>>(std::istream  &input, Double &d)
+  { 
+    input >> d.val;
+    return input;            
+  }
 } // libff

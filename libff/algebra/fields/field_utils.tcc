@@ -64,20 +64,20 @@ get_root_of_unity2(const size_t n, bool *success) {
   const size_t logn = libff::log2(n);
   if (n != ((size_t)1u << logn)) {
     *success = false;
-    return FieldT();
+    return FieldT(1);
   }
 
   if (logn > FieldT::s) {
     *success = false;
-    return FieldT();
+    return FieldT(2);
   }
+
+  *success = true;
 
   FieldT omega = FieldT::root_of_unity;
   for (size_t i = FieldT::s; i > logn; --i) {
     omega *= omega;
-  }
-
-  *success = true;
+  }  
 
   return omega;
 }
