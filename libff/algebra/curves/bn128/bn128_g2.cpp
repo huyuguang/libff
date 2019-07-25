@@ -24,11 +24,11 @@ std::vector<size_t> &bn128_G2::fixed_base_exp_window_table() {
   return _fixed_base_exp_window_table_;
 }
 bn128_G2 &bn128_G2::G2_zero() {
-  static bn128_G2 _G2_zero_;
+  static bn128_G2 _G2_zero_(constructor_dummy_t{});
   return _G2_zero_;
 }
 bn128_G2 &bn128_G2::G2_one() {
-  static bn128_G2 _G2_one_;
+  static bn128_G2 _G2_one_(constructor_dummy_t{});
   return _G2_one_;
 }
 

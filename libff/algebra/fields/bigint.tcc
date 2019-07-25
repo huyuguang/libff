@@ -12,6 +12,7 @@
 #include <cassert>
 #include <cstring>
 #include <random>
+#include <boost/core/ignore_unused.hpp>
 #include <msvc_hack.h>
 
 namespace libff {
@@ -36,6 +37,7 @@ bigint<n>::bigint(const char* s) /// Initialize from a string containing an inte
     }
 
     mp_size_t limbs_written = mpn_set_str(this->data, s_copy, l, 10);
+    boost::ignore_unused(limbs_written);
     assert(limbs_written <= n);
 
     delete[] s_copy;
@@ -216,6 +218,7 @@ std::istream& operator>>(std::istream &in, bigint<n> &b)
     }
 
     mp_size_t limbs_written = mpn_set_str(b.data, s_copy, l, 10);
+    boost::ignore_unused(limbs_written);
     assert(limbs_written <= n);
 
     delete[] s_copy;

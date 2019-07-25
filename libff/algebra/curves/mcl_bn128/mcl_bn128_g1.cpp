@@ -181,7 +181,7 @@ mcl_bn128_G1 mcl_bn128_G1::random_element()
 
 std::ostream& operator<<(std::ostream &out, const mcl_bn128_G1 &g)
 {
-	auto g_pt(g.pt);
+    auto g_pt(g.pt);
     g_pt.normalize();
 
     out << (g.is_zero() ? '1' : '0') << OUTPUT_SEPARATOR;

@@ -23,12 +23,12 @@ std::vector<size_t> &edwards_G1::fixed_base_exp_window_table() {
   return _fixed_base_exp_window_table_;
 }
 edwards_G1 &edwards_G1::G1_zero() {
-  static edwards_G1 _G1_zero_;
+  static edwards_G1 _G1_zero_(constructor_dummy_t{});
   return _G1_zero_;
 }
 
 edwards_G1 &edwards_G1::G1_one() {
-  static edwards_G1 _G1_one_;
+  static edwards_G1 _G1_one_(constructor_dummy_t{});
   return _G1_one_;
 }
 

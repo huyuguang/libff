@@ -36,6 +36,8 @@ public:
 
     bn::Fp2 coord[3];
     bn128_G2();
+    struct constructor_dummy_t {};
+    bn128_G2(constructor_dummy_t) {}
     typedef bn128_Fq base_field;
     typedef bn128_Fr scalar_field;
 

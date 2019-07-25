@@ -45,6 +45,8 @@ public:
 
     // using projective coordinates
     mnt6_G2();
+    struct constructor_dummy_t {};
+    mnt6_G2(constructor_dummy_t) {}
     mnt6_G2(const mnt6_Fq3& X, const mnt6_Fq3& Y, const mnt6_Fq3& Z) : X_(X), Y_(Y), Z_(Z) {}
 
     mnt6_Fq3 X() const { return X_; }

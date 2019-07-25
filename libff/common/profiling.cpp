@@ -19,6 +19,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/core/ignore_unused.hpp>
+
 #include <libff/common/default_types/ec_pp.hpp>
 #include <libff/common/profiling.hpp>
 #include <libff/common/utils.hpp>
@@ -335,6 +337,7 @@ void leave_block(const std::string &msg, const bool indent)
 
 void print_mem(const std::string &s)
 {
+    boost::ignore_unused(s);
 #ifndef NO_PROCPS
     struct proc_t usage;
     look_up_our_self(&usage);

@@ -43,6 +43,8 @@ public:
 
     // using projective coordinates
     mnt4_G1();
+    struct constructor_dummy_t {};
+    mnt4_G1(constructor_dummy_t) {}
     mnt4_G1(const mnt4_Fq& X, const mnt4_Fq& Y) : X_(X), Y_(Y), Z_(base_field::one()) {}
     mnt4_G1(const mnt4_Fq& X, const mnt4_Fq& Y, const mnt4_Fq& Z) : X_(X), Y_(Y), Z_(Z) {}
 

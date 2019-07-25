@@ -25,12 +25,12 @@ std::vector<size_t> &alt_bn128_G1::fixed_base_exp_window_table() {
 }
 
 alt_bn128_G1 &alt_bn128_G1::G1_zero() { 
-  static alt_bn128_G1 _G1_zero_;
+  static alt_bn128_G1 _G1_zero_(constructor_dummy_t{});
   return _G1_zero_;
 }
 
 alt_bn128_G1 &alt_bn128_G1::G1_one() {
-  static alt_bn128_G1 _G1_one_;
+  static alt_bn128_G1 _G1_one_(constructor_dummy_t{});
   return _G1_one_;
 }
 
@@ -425,7 +425,7 @@ std::ostream& operator<<(std::ostream &out, const alt_bn128_G1 &g)
     out << copy.X << OUTPUT_SEPARATOR << copy.Y;
 #else
     /* storing LSB of Y */
-    out << copy.X << OUTPUT_SEPARATOR << (copy.Y.as_bigint().data[0] & 1);
+    out << copy.X << OUTPUT_SEPARATOR << ((copy.Y.as_bigint().data[0] & 1)?'1':'0');
 #endif
 
     return out;

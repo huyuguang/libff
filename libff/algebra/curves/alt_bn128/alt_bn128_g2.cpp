@@ -23,11 +23,11 @@ std::vector<size_t> &alt_bn128_G2::fixed_base_exp_window_table(){
   return _fixed_base_exp_window_table_;
 }
 alt_bn128_G2 &alt_bn128_G2::G2_zero() {
-  static alt_bn128_G2 _G2_zero_;
+  static alt_bn128_G2 _G2_zero_(constructor_dummy_t{});
   return _G2_zero_;
 }
 alt_bn128_G2 &alt_bn128_G2::G2_one() {
-  static alt_bn128_G2 _G2_one_;
+  static alt_bn128_G2 _G2_one_(constructor_dummy_t{});
   return _G2_one_;
 }
 
@@ -431,12 +431,12 @@ std::ostream& operator<<(std::ostream &out, const alt_bn128_G2 &g)
 {
     alt_bn128_G2 copy(g);
     copy.to_affine_coordinates();
-    out << (copy.is_zero() ? 1 : 0) << OUTPUT_SEPARATOR;
+    out << (copy.is_zero() ? '1' : '0') << OUTPUT_SEPARATOR;
 #ifdef NO_PT_COMPRESSION
     out << copy.X << OUTPUT_SEPARATOR << copy.Y;
 #else
     /* storing LSB of Y */
-    out << copy.X << OUTPUT_SEPARATOR << (copy.Y.c0.as_bigint().data[0] & 1);
+    out << copy.X << OUTPUT_SEPARATOR << ((copy.Y.c0.as_bigint().data[0] & 1)?'1':'0');
 #endif
 
     return out;
@@ -447,13 +447,15 @@ std::istream& operator>>(std::istream &in, alt_bn128_G2 &g)
     char is_zero;
     alt_bn128_Fq2 tX, tY;
 
-#ifdef NO_PT_COMPRESSION
-    in >> is_zero >> tX >> tY;
-    is_zero -= '0';
-#else
     in.read((char*)&is_zero, 1); // this reads is_zero;
     is_zero -= '0';
     consume_OUTPUT_SEPARATOR(in);
+
+#ifdef NO_PT_COMPRESSION
+    in >> tX;
+    consume_OUTPUT_SEPARATOR(in);
+    in >> tY;
+#else
 
     unsigned char Y_lsb;
     in >> tX;

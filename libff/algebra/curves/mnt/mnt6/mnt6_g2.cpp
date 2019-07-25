@@ -29,11 +29,11 @@ std::vector<size_t> &mnt6_G2::fixed_base_exp_window_table() {
   return _fixed_base_exp_window_table_;
 }
 mnt6_G2 &mnt6_G2::G2_zero() {
-  static mnt6_G2 _G2_zero_;
+  static mnt6_G2 _G2_zero_(constructor_dummy_t{});
   return _G2_zero_;
 }
 mnt6_G2 &mnt6_G2::G2_one() {
-  static mnt6_G2 _G2_one_;
+  static mnt6_G2 _G2_one_(constructor_dummy_t{});
   return _G2_one_;
 }
 

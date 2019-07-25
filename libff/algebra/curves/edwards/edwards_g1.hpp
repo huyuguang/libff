@@ -31,6 +31,9 @@ public:
 
     edwards_Fq X, Y, Z;
     edwards_G1();
+    struct constructor_dummy_t {};
+    edwards_G1(constructor_dummy_t) {}
+
 private:
     edwards_G1(const edwards_Fq& X, const edwards_Fq& Y, const edwards_Fq& Z) : X(X), Y(Y), Z(Z) {};
 

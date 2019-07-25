@@ -14,6 +14,8 @@
 #include <cstdlib>
 #include <limits>
 
+#include <boost/core/ignore_unused.hpp>
+
 #include <libff/algebra/fields/field_utils.hpp>
 #include <libff/algebra/fields/fp_aux.tcc>
 
@@ -179,6 +181,7 @@ void Fp_model<n,modulus>::mul_reduce(const bigint<n> &other)
         if (mpn_cmp(res+n, modulus.data, n) >= 0)
         {
             const mp_limb_t borrow = mpn_sub(res+n, res+n, n, modulus.data, n);
+            boost::ignore_unused(borrow);
             assert(borrow == 0);
         }
 
@@ -206,6 +209,7 @@ Fp_model<n,modulus>::Fp_model(const mp_limb_signed_t x, const bool is_unsigned)
     {
         mp_limb_signed_t y = (mp_limb_signed_t)x;
         const mp_limb_t borrow = mpn_sub_1(this->mont_repr.data, modulus.data, n, (mp_limb_t)-y);
+        boost::ignore_unused(borrow);
         assert(borrow == 0);
     }
 
@@ -412,6 +416,7 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::operator+=(const Fp_model<n,modulus>& 
         if (carry || mpn_cmp(scratch, modulus.data, n) >= 0)
         {
             const mp_limb_t borrow = mpn_sub(scratch, scratch, n+1, modulus.data, n);
+            boost::ignore_unused(borrow);
             assert(borrow == 0);
         }
 
@@ -504,6 +509,7 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::operator-=(const Fp_model<n,modulus>& 
         }
 
         const mp_limb_t borrow = mpn_sub(scratch, scratch, n+1, other.mont_repr.data, n);
+        boost::ignore_unused(borrow);
         assert(borrow == 0);
 
         mpn_copyi(this->mont_repr.data, scratch, n);
@@ -658,6 +664,7 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::invert()
 
     /* computes gcd(u, v) = g = u*s + v*t, so s*u will be 1 (mod v) */
     const mp_size_t gn = mpn_gcdext(g.data, ss, &sn, this->mont_repr.data, n, v.data, n);
+    boost::ignore_unused(gn);
     assert(gn == 1 && g.data[0] == 1); /* inverse exists */
 
     mp_limb_t q; /* division result fits into q, as sn <= n+1 */
@@ -679,6 +686,7 @@ Fp_model<n,modulus>& Fp_model<n,modulus>::invert()
     if (sn < 0)
     {
         const mp_limb_t borrow = mpn_sub_n(this->mont_repr.data, modulus.data, this->mont_repr.data, n);
+        boost::ignore_unused(borrow);
         assert(borrow == 0);
     }
 
